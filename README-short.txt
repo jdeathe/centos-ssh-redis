@@ -1,0 +1,1 @@
+CentOS-6 6.10 x86_64 - Redis.

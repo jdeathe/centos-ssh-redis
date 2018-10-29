@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+readonly BIN="/usr/bin/redis-server"
+readonly CONFIG_PATH="/etc/redis.conf"
+readonly LOCK_FILE="/var/lock/subsys/redis-server-bootstrap"
+readonly NICE="/bin/nice"
+readonly NICENESS="0"
+readonly OPTIONS="${REDIS_OPTIONS:-}"
+readonly USER="redis"
+
+while true
+do
+	sleep 0.1
+	if [[ ${REDIS_AUTOSTART_REDIS_BOOTSTRAP} == true ]] \
+		&& [[ ! -e ${LOCK_FILE} ]]
+	then
+		break
+	fi
+done
+
+exec ${NICE} \
+	-n ${NICENESS} \
+	${BIN} \
+	${CONFIG_PATH} \
+	${OPTIONS}

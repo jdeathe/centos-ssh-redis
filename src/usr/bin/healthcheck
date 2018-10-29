@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -e
+
+if ! ps axo command | grep -qE '^/usr/bin/python /usr/bin/supervisord'
+then
+	>&2 printf -- \
+		'%s\n' \
+		"supervisord not running."
+	exit 1
+fi
+
+# Client only mode
+if [[ ! ${REDIS_AUTOSTART_REDIS_BOOTSTRAP} == true ]] \
+	|| [[ ! ${REDIS_AUTOSTART_REDIS_WRAPPER} == true ]]
+then
+	exit 0
+fi
+
+if ! ps axo command | grep -qE '^/usr/bin/redis-server'
+then
+	>&2 printf -- \
+		'%s\n' \
+		"redis-server not running."
+	exit 1
+fi
+
+if ! redis-cli PING | grep -qE '^PONG$'
+then
+	>&2 printf -- \
+		'%s\n' \
+		"redis-server not responding."
+	exit 1
+fi
+
+exit 0

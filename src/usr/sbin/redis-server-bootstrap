@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+
+set -e
+
+readonly CONFIG_PATH="/etc/redis.conf"
+readonly LOCK_FILE="/var/lock/subsys/redis-server-bootstrap"
+readonly OPTIONS="${REDIS_OPTIONS:-}"
+readonly TIMER_START="$(
+	date +%s.%N
+)"
+readonly USER="redis"
+readonly WRAPPER="/usr/sbin/redis-server-wrapper"
+
+# Create lock file
+touch \
+	"${LOCK_FILE}"
+
+function load_config ()
+{
+	local file_path="${1:-}"
+
+	if [[ -n ${file_path} ]] \
+		&& [[ -s ${file_path} ]]
+	then
+		# Replace placeholders with environment variables
+		sed -i \
+			-e "s~{{REDIS_MAXMEMORY}}~${REDIS_MAXMEMORY:-64mb}~" \
+			-e "s~{{REDIS_MAXMEMORY_POLICY}}~${REDIS_MAXMEMORY_POLICY:-allkeys-lru}~" \
+			-e "s~{{REDIS_MAXMEMORY_SAMPLES}}~${REDIS_MAXMEMORY_SAMPLES:-10}~" \
+			-e "s~{{REDIS_TCP_BACKLOG}}~${REDIS_TCP_BACKLOG:-1024}~" \
+			"${file_path}"
+	fi
+}
+
+function set_wrapper_execute_user ()
+{
+	local file_path="${1:-}"
+	local user="${2:-}"
+
+	chgrp \
+		"${USER}" \
+		"${WRAPPER}"
+
+	chmod \
+		0750 \
+		"${WRAPPER}"
+}
+
+load_config \
+	"${CONFIG_PATH}"
+
+set_wrapper_execute_user \
+	"${WRAPPER}" \
+	"${USER}"
+
+# Force a longer execution time to allow output in logs
+sleep 0.05
+
+TIMER_TOTAL="$(
+	echo - | awk "\
+	{ T1=\"${TIMER_START}\" } \
+	{ T2=\"$(date +%s.%N)\" } \
+	{ print T2 - T1; }"
+)"
+
+cat \
+	<<-EOT
+
+	================================================================================
+	Redis Details
+	--------------------------------------------------------------------------------
+	maxmemory : ${REDIS_MAXMEMORY:-64mb}
+	maxmemory-policy: ${REDIS_MAXMEMORY_POLICY:-allkeys-lru}
+	maxmemory-samples: ${REDIS_MAXMEMORY_SAMPLES:-5}
+	tcp-backlog: ${REDIS_TCP_BACKLOG:-1024}
+	redis-server options: ${REDIS_OPTIONS:-N/A}
+	--------------------------------------------------------------------------------
+	${TIMER_TOTAL}
+
+EOT
+
+# Release lock file
+rm -f \
+	"${LOCK_FILE}"
+
+exit 0
