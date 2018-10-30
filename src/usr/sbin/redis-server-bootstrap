@@ -78,9 +78,6 @@ set_log_write_user \
 load_config \
 	"${CONFIG_PATH}"
 
-# Force a longer execution time to allow output in logs
-sleep 0.05
-
 TIMER_TOTAL="$(
 	echo - | awk "\
 	{ T1=\"${TIMER_START}\" } \
