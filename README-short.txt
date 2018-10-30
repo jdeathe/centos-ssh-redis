@@ -1,1 +1,1 @@
-CentOS-6 6.10 x86_64 - Redis.
+CentOS-7 7.5.1804 x86_64 - Redis.

@@ -5,8 +5,8 @@ readonly DOCKER_USER=jdeathe
 readonly DOCKER_IMAGE_NAME=centos-ssh-redis
 
 # Tag validation patterns
-readonly DOCKER_IMAGE_TAG_PATTERN='^(latest|centos-6|((1|centos-6-1)\.[0-9]+\.[0-9]+))$'
-readonly DOCKER_IMAGE_RELEASE_TAG_PATTERN='^(1|centos-6-1)\.[0-9]+\.[0-9]+$'
+readonly DOCKER_IMAGE_TAG_PATTERN='^(latest|centos-[6-7]|((1|2|centos-(6-1|7-2))\.[0-9]+\.[0-9]+))$'
+readonly DOCKER_IMAGE_RELEASE_TAG_PATTERN='^(1|2|centos-(6-1|7-2))\.[0-9]+\.[0-9]+$'
 
 # -----------------------------------------------------------------------------
 # Variables
@@ -56,6 +56,6 @@ REDIS_AUTOSTART_REDIS_BOOTSTRAP="${REDIS_AUTOSTART_REDIS_BOOTSTRAP:-true}"
 REDIS_AUTOSTART_REDIS_WRAPPER="${REDIS_AUTOSTART_REDIS_WRAPPER:-true}"
 REDIS_MAXMEMORY="${REDIS_MAXMEMORY:-64mb}"
 REDIS_MAXMEMORY_POLICY="${REDIS_MAXMEMORY_POLICY:-allkeys-lru}"
-REDIS_MAXMEMORY_SAMPLES="${REDIS_MAXMEMORY_SAMPLES:-10}"
+REDIS_MAXMEMORY_SAMPLES="${REDIS_MAXMEMORY_SAMPLES:-5}"
 REDIS_OPTIONS="${REDIS_OPTIONS:-}"
 REDIS_TCP_BACKLOG="${REDIS_TCP_BACKLOG:-1024}"

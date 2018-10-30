@@ -1,11 +1,11 @@
 # Change Log
 
-## centos-6
+## centos-7
 
-Summary of release changes for Version 1.
+Summary of release changes for Version 2.
 
-CentOS-6 6.10 x86_64 - Redis 3.2.
+CentOS-7 7.5.1804 x86_64 - Redis 4.0.
 
-### 1.0.0 - Unreleased
+### 2.0.0 - Unreleased
 
 - Initial release.

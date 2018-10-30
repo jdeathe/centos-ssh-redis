@@ -53,6 +53,9 @@ set_wrapper_execute_user \
 	"${WRAPPER}" \
 	"${USER}"
 
+# Force a longer execution time to allow output in logs
+sleep 0.05
+
 TIMER_TOTAL="$(
 	echo - | awk "\
 	{ T1=\"${TIMER_START}\" } \
