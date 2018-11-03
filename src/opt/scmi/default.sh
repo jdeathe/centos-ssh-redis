@@ -40,6 +40,9 @@ fi
 # Common parameters of create and run targets
 DOCKER_CONTAINER_PARAMETERS="--name ${DOCKER_NAME} \
 --restart ${DOCKER_RESTART_POLICY} \
+--sysctl \"net.core.somaxconn=${SYSCTL_NET_CORE_SOMAXCONN}\" \
+--sysctl \"net.ipv4.ip_local_port_range=${SYSCTL_NET_IPV4_IP_LOCAL_PORT_RANGE}\" \
+--sysctl \"net.ipv4.route.flush=${SYSCTL_NET_IPV4_ROUTE_FLUSH}\" \
 --env \"REDIS_AUTOSTART_REDIS_BOOTSTRAP=${REDIS_AUTOSTART_REDIS_BOOTSTRAP}\" \
 --env \"REDIS_AUTOSTART_REDIS_WRAPPER=${REDIS_AUTOSTART_REDIS_WRAPPER}\" \
 --env \"REDIS_MAXMEMORY=${REDIS_MAXMEMORY}\" \
