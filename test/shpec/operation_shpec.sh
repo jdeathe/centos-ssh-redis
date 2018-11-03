@@ -586,7 +586,7 @@ function test_custom_configuration ()
 			&> /dev/null \
 			&& docker exec \
 				redis.pool-1.1.1 \
-				grep -q '^bind 0.0.0.0$' \
+				grep -q '^maxmemory-policy {{REDIS_MAXMEMORY_POLICY}}$' \
 				/etc/redis.conf
 
 			assert equal \
