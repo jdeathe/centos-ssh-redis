@@ -1,4 +1,4 @@
-readonly STARTUP_TIME=1
+readonly STARTUP_TIME=2
 readonly TEST_DIRECTORY="test"
 
 # These should ideally be a static value but hosts might be using this port so 
@@ -546,16 +546,16 @@ function test_custom_configuration ()
 		docker run \
 			--detach \
 			--name redis.pool-1.1.1 \
-			--env MEMCACHED_AUTOSTART_MEMCACHED_WRAPPER=false \
+			--env REDIS_AUTOSTART_REDIS_WRAPPER=false \
 			jdeathe/centos-ssh-redis:latest \
 		&> /dev/null
 
 		sleep ${STARTUP_TIME}
 
-		it "Can disable redis-wrapper."
+		it "Can disable redis-server-wrapper."
 			docker ps \
-				--format "name=redis.pool-1.1.1" \
-				--format "health=healthy" \
+				--filter "name=redis.pool-1.1.1" \
+				--filter "health=healthy" \
 			&> /dev/null \
 			&& docker top \
 				redis.pool-1.1.1 \
@@ -564,6 +564,34 @@ function test_custom_configuration ()
 			assert equal \
 				"${?}" \
 				"1"
+		end
+
+		__terminate_container \
+			redis.pool-1.1.1 \
+		&> /dev/null
+
+		docker run \
+			--detach \
+			--name redis.pool-1.1.1 \
+			--env REDIS_AUTOSTART_REDIS_BOOTSTRAP=false \
+			jdeathe/centos-ssh-redis:latest \
+		&> /dev/null
+
+		sleep ${STARTUP_TIME}
+
+		it "Can disable redis-server-bootstrap."
+			docker ps \
+				--filter "name=redis.pool-1.1.1" \
+				--filter "health=healthy" \
+			&> /dev/null \
+			&& docker exec \
+				redis.pool-1.1.1 \
+				grep -q '^bind 0.0.0.0$' \
+				/etc/redis.conf
+
+			assert equal \
+				"${?}" \
+				"0"
 		end
 
 		__terminate_container \
