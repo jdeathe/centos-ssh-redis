@@ -40,6 +40,7 @@ RUN ln -sf \
 	&& chgrp redis \
 		/usr/sbin/redis-server-wrapper \
 	&& sed -i -r \
+		-e "s~^(logfile ).+$~\1\"\"~" \
 		-e "s~^(bind ).+$~\10.0.0.0~" \
 		-e "s~^(# *)?(maxmemory ).+$~\2{{REDIS_MAXMEMORY}}~" \
 		-e "s~^(# *)?(maxmemory-policy ).+$~\2{{REDIS_MAXMEMORY_POLICY}}~" \
@@ -59,8 +60,8 @@ ENV REDIS_AUTOSTART_REDIS_BOOTSTRAP="true" \
 	REDIS_MAXMEMORY_SAMPLES="5" \
 	REDIS_OPTIONS="" \
 	REDIS_TCP_BACKLOG="1024" \
-	SSH_AUTOSTART_SSHD=false \
-	SSH_AUTOSTART_SSHD_BOOTSTRAP=false
+	SSH_AUTOSTART_SSHD="false" \
+	SSH_AUTOSTART_SSHD_BOOTSTRAP="false"
 
 # -----------------------------------------------------------------------------
 # Set image metadata
