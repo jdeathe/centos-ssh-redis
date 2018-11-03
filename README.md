@@ -66,14 +66,14 @@ $ docker run \
   --detach \
   --name redis.pool-1.1.1 \
   --publish 6379:6379/tcp \
+  --sysctl "net.core.somaxconn=2048" \
+  --sysctl "net.ipv4.ip_local_port_range=1024 65535" \
+  --sysctl "net.ipv4.route.flush=1" \
   --env "REDIS_MAXMEMORY=32mb" \
   --env "REDIS_MAXMEMORY_POLICY=allkeys-lru" \
   --env "REDIS_MAXMEMORY_SAMPLES=10" \
   --env "REDIS_OPTIONS=--loglevel verbose" \
   --env "REDIS_TCP_BACKLOG=2048" \
-  --sysctl "net.core.somaxconn=2048" \
-  --sysctl "net.ipv4.ip_local_port_range=1024 65535" \
-  --sysctl "net.ipv4.route.flush=1" \
   jdeathe/centos-ssh-redis:1.0.0
 ```
 
