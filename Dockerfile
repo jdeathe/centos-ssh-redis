@@ -1,9 +1,9 @@
 # =============================================================================
 # jdeathe/centos-ssh-redis
 #
-# CentOS-6, Redis 4.0.
+# CentOS-7, Redis 4.0.
 # =============================================================================
-FROM jdeathe/centos-ssh:2.4.0
+FROM jdeathe/centos-ssh:2.4.1
 
 RUN yum -y install \
 			--setopt=tsflags=nodocs \
@@ -66,7 +66,7 @@ ENV REDIS_AUTOSTART_REDIS_BOOTSTRAP="true" \
 # -----------------------------------------------------------------------------
 # Set image metadata
 # -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="2.0.0"
+ARG RELEASE_VERSION="2.0.1"
 LABEL \
 	maintainer="James Deathe <james.deathe@gmail.com>" \
 	install="docker run \

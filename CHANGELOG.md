@@ -6,6 +6,10 @@ Summary of release changes for Version 2.
 
 CentOS-7 7.5.1804 x86_64 - Redis 4.0.
 
+### 2.0.1 - 2018-11-19
+
+- Updates source image to [2.4.1](https://github.com/jdeathe/centos-ssh/releases/tag/2.4.1).
+
 ### 2.0.0 - 2018-11-03
 
 - Initial release.
