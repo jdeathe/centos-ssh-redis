@@ -66,7 +66,7 @@ ENV REDIS_AUTOSTART_REDIS_BOOTSTRAP="true" \
 # -----------------------------------------------------------------------------
 # Set image metadata
 # -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="1.0.0"
+ARG RELEASE_VERSION="1.0.1"
 LABEL \
 	maintainer="James Deathe <james.deathe@gmail.com>" \
 	install="docker run \
