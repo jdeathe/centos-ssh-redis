@@ -3,7 +3,7 @@
 #
 # CentOS-6, Redis 3.2.
 # =============================================================================
-FROM jdeathe/centos-ssh:1.9.0
+FROM jdeathe/centos-ssh:1.9.1
 
 RUN yum -y install \
 			--setopt=tsflags=nodocs \
@@ -66,7 +66,7 @@ ENV REDIS_AUTOSTART_REDIS_BOOTSTRAP="true" \
 # -----------------------------------------------------------------------------
 # Set image metadata
 # -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="1.0.0"
+ARG RELEASE_VERSION="1.0.1"
 LABEL \
 	maintainer="James Deathe <james.deathe@gmail.com>" \
 	install="docker run \
