@@ -3,7 +3,7 @@
 #
 # CentOS-6, Redis 3.2.
 # =============================================================================
-FROM jdeathe/centos-ssh:1.9.0
+FROM jdeathe/centos-ssh:1.9.1
 
 RUN yum -y install \
 			--setopt=tsflags=nodocs \
