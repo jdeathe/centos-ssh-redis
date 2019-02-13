@@ -3,7 +3,7 @@
 #
 # CentOS-7, Redis 4.0.
 # =============================================================================
-FROM jdeathe/centos-ssh:2.4.1
+FROM jdeathe/centos-ssh:2.5.0
 
 RUN yum -y install \
 			--setopt=tsflags=nodocs \
