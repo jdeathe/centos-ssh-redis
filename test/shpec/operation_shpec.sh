@@ -411,7 +411,7 @@ function test_custom_configuration ()
 			end
 		end
 
-		describe "Runs on a private network."
+		describe "Runs on a private network"
 			__terminate_container \
 				redis.pool-1.1.1 \
 			&> /dev/null
@@ -420,7 +420,7 @@ function test_custom_configuration ()
 				redis.pool-1.1.2 \
 			&> /dev/null
 
-			it "Runs a named server container"
+			it "Runs a named server container."
 				docker run \
 					--detach \
 					--name redis.pool-1.1.1 \
@@ -434,7 +434,7 @@ function test_custom_configuration ()
 					0
 			end
 
-			it "Runs a named client container"
+			it "Runs a named client container."
 				docker run \
 					--detach \
 					--name redis.pool-1.1.2 \
@@ -470,7 +470,7 @@ function test_custom_configuration ()
 			fi
 
 			describe "Redis usage"
-				it "Can set data"
+				it "Can set data."
 					docker cp \
 						test/fixtures/lorem-ipsum-base64.txt \
 						redis.pool-1.1.2:/tmp/lorem-ipsum-base64.txt
@@ -489,7 +489,7 @@ function test_custom_configuration ()
 						0
 				end
 
-				it "Can get data"
+				it "Can get data."
 					test_data_output="$(
 						docker exec \
 							redis.pool-1.1.2 \
@@ -504,7 +504,7 @@ function test_custom_configuration ()
 						"${test_data_input}"
 				end
 
-				it "Can flush data"
+				it "Can flush data."
 					docker exec \
 						redis.pool-1.1.2 \
 						redis-cli \
