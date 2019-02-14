@@ -16,10 +16,8 @@ RUN yum -y install \
 # ------------------------------------------------------------------------------
 # Copy files into place
 # ------------------------------------------------------------------------------
-ADD src/etc/services-config/supervisor/supervisord.d \
-	/etc/services-config/supervisor/supervisord.d/
-ADD src/etc/systemd/system \
-	/etc/systemd/system/
+ADD src/etc \
+	/etc/
 ADD src/opt/scmi \
 	/opt/scmi/
 ADD src/usr \
@@ -38,12 +36,8 @@ RUN sed -i -r \
 		-e "s~^(# *)?(maxmemory-samples ).+$~\2{{REDIS_MAXMEMORY_SAMPLES}}~" \
 		-e "s~^(tcp-backlog ).*$~\1{{REDIS_TCP_BACKLOG}}~" \
 		/etc/redis.conf \
-	&& ln -sf \
-		/etc/services-config/supervisor/supervisord.d/redis-server-bootstrap.conf \
-		/etc/supervisord.d/redis-server-bootstrap.conf \
-	&& ln -sf \
-		/etc/services-config/supervisor/supervisord.d/redis-server-wrapper.conf \
-		/etc/supervisord.d/redis-server-wrapper.conf \
+	&& chmod 644 \
+		/etc/supervisord.d/redis-server-{bootstrap,wrapper}.conf \
 	&& chmod 700 \
 		/usr/{bin/healthcheck,sbin/redis-server-{bootstrap,wrapper}} \
 	&& chmod 750 \
