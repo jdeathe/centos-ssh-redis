@@ -25,7 +25,8 @@ ADD src/usr \
 
 # ------------------------------------------------------------------------------
 # Provisioning
-# - Insert placeholders into redis configuration file.
+# - Insert placeholders into redis configuration file
+# - Replace placeholders with values in systemd service unit template
 # - Set permissions
 # ------------------------------------------------------------------------------
 RUN sed -i -r \
@@ -36,6 +37,9 @@ RUN sed -i -r \
 		-e "s~^(# *)?(maxmemory-samples ).+$~\2{{REDIS_MAXMEMORY_SAMPLES}}~" \
 		-e "s~^(tcp-backlog ).*$~\1{{REDIS_TCP_BACKLOG}}~" \
 		/etc/redis.conf \
+	&& sed -i \
+		-e "s~{{RELEASE_VERSION}}~${RELEASE_VERSION}~g" \
+		/etc/systemd/system/centos-ssh-redis@.service \
 	&& chmod 644 \
 		/etc/supervisord.d/redis-server-{bootstrap,wrapper}.conf \
 	&& chmod 700 \
