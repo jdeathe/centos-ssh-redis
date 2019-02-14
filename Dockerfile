@@ -1,10 +1,10 @@
-# =============================================================================
-# jdeathe/centos-ssh-redis
-#
-# CentOS-7, Redis 4.0.
-# =============================================================================
 FROM jdeathe/centos-ssh:2.5.0
 
+ARG RELEASE_VERSION="2.0.1"
+
+# ------------------------------------------------------------------------------
+# Base install of required packages
+# ------------------------------------------------------------------------------
 RUN yum -y install \
 			--setopt=tsflags=nodocs \
 			--disableplugin=fastestmirror \
@@ -13,21 +13,32 @@ RUN yum -y install \
 		redis40u* \
 	&& yum clean all
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copy files into place
-# -----------------------------------------------------------------------------
-ADD src/usr/bin \
-	/usr/bin/
-ADD src/usr/sbin \
-	/usr/sbin/
-ADD src/opt/scmi \
-	/opt/scmi/
+# ------------------------------------------------------------------------------
 ADD src/etc/services-config/supervisor/supervisord.d \
 	/etc/services-config/supervisor/supervisord.d/
 ADD src/etc/systemd/system \
 	/etc/systemd/system/
+ADD src/opt/scmi \
+	/opt/scmi/
+ADD src/usr \
+	/usr/
 
-RUN ln -sf \
+# ------------------------------------------------------------------------------
+# Provisioning
+# - Insert placeholders into redis configuration file.
+# - Set permissions
+# ------------------------------------------------------------------------------
+RUN sed -i -r \
+		-e "s~^(logfile ).+$~\1\"\"~" \
+		-e "s~^(bind ).+$~\10.0.0.0~" \
+		-e "s~^(# *)?(maxmemory ).+$~\2{{REDIS_MAXMEMORY}}~" \
+		-e "s~^(# *)?(maxmemory-policy ).+$~\2{{REDIS_MAXMEMORY_POLICY}}~" \
+		-e "s~^(# *)?(maxmemory-samples ).+$~\2{{REDIS_MAXMEMORY_SAMPLES}}~" \
+		-e "s~^(tcp-backlog ).*$~\1{{REDIS_TCP_BACKLOG}}~" \
+		/etc/redis.conf \
+	&& ln -sf \
 		/etc/services-config/supervisor/supervisord.d/redis-server-bootstrap.conf \
 		/etc/supervisord.d/redis-server-bootstrap.conf \
 	&& ln -sf \
@@ -38,21 +49,13 @@ RUN ln -sf \
 	&& chmod 750 \
 		/usr/sbin/redis-server-wrapper \
 	&& chgrp redis \
-		/usr/sbin/redis-server-wrapper \
-	&& sed -i -r \
-		-e "s~^(logfile ).+$~\1\"\"~" \
-		-e "s~^(bind ).+$~\10.0.0.0~" \
-		-e "s~^(# *)?(maxmemory ).+$~\2{{REDIS_MAXMEMORY}}~" \
-		-e "s~^(# *)?(maxmemory-policy ).+$~\2{{REDIS_MAXMEMORY_POLICY}}~" \
-		-e "s~^(# *)?(maxmemory-samples ).+$~\2{{REDIS_MAXMEMORY_SAMPLES}}~" \
-		-e "s~^(tcp-backlog ).*$~\1{{REDIS_TCP_BACKLOG}}~" \
-		/etc/redis.conf
+		/usr/sbin/redis-server-wrapper
 
 EXPOSE 6379
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Set default environment variables
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 ENV REDIS_AUTOSTART_REDIS_BOOTSTRAP="true" \
 	REDIS_AUTOSTART_REDIS_WRAPPER="true" \
 	REDIS_MAXMEMORY="64mb" \
@@ -63,10 +66,9 @@ ENV REDIS_AUTOSTART_REDIS_BOOTSTRAP="true" \
 	SSH_AUTOSTART_SSHD="false" \
 	SSH_AUTOSTART_SSHD_BOOTSTRAP="false"
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Set image metadata
-# -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="2.0.1"
+# ------------------------------------------------------------------------------
 LABEL \
 	maintainer="James Deathe <james.deathe@gmail.com>" \
 	install="docker run \
