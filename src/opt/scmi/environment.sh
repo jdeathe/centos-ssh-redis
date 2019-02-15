@@ -1,6 +1,6 @@
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Constants
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 readonly DOCKER_USER=jdeathe
 readonly DOCKER_IMAGE_NAME=centos-ssh-redis
 
@@ -8,14 +8,14 @@ readonly DOCKER_IMAGE_NAME=centos-ssh-redis
 readonly DOCKER_IMAGE_TAG_PATTERN='^(latest|centos-[6-7]|((1|2|centos-(6-1|7-2))\.[0-9]+\.[0-9]+))$'
 readonly DOCKER_IMAGE_RELEASE_TAG_PATTERN='^(1|2|centos-(6-1|7-2))\.[0-9]+\.[0-9]+$'
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Variables
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Docker image/container settings
 DOCKER_CONTAINER_OPTS="${DOCKER_CONTAINER_OPTS:-}"
 DOCKER_IMAGE_TAG="${DOCKER_IMAGE_TAG:-latest}"
-DOCKER_NAME="${DOCKER_NAME:-redis.pool-1.1.1}"
+DOCKER_NAME="${DOCKER_NAME:-redis.1}"
 DOCKER_PORT_MAP_TCP_22="${DOCKER_PORT_MAP_TCP_22:-NULL}"
 DOCKER_PORT_MAP_TCP_6379="${DOCKER_PORT_MAP_TCP_6379:-6379}"
 DOCKER_PORT_MAP_UDP_6379="${DOCKER_PORT_MAP_UDP_6379:-NULL}"
@@ -40,9 +40,9 @@ REGISTER_ETCD_PARAMETERS="${REGISTER_ETCD_PARAMETERS:-}"
 REGISTER_TTL="${REGISTER_TTL:-60}"
 REGISTER_UPDATE_INTERVAL="${REGISTER_UPDATE_INTERVAL:-55}"
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Application container configuration
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 SSH_AUTHORIZED_KEYS="${SSH_AUTHORIZED_KEYS:-}"
 SSH_AUTOSTART_SSHD="${SSH_AUTOSTART_SSHD:-true}"
 SSH_AUTOSTART_SSHD_BOOTSTRAP="${SSH_AUTOSTART_SSHD_BOOTSTRAP:-true}"
@@ -56,7 +56,7 @@ SSH_USER_ID="${SSH_USER_ID:-500:500}"
 SSH_USER_PASSWORD="${SSH_USER_PASSWORD:-}"
 SSH_USER_PASSWORD_HASHED="${SSH_USER_PASSWORD_HASHED:-false}"
 SSH_USER_SHELL="${SSH_USER_SHELL:-/bin/bash}"
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 REDIS_AUTOSTART_REDIS_BOOTSTRAP="${REDIS_AUTOSTART_REDIS_BOOTSTRAP:-true}"
 REDIS_AUTOSTART_REDIS_WRAPPER="${REDIS_AUTOSTART_REDIS_WRAPPER:-true}"
 REDIS_MAXMEMORY="${REDIS_MAXMEMORY:-64mb}"
