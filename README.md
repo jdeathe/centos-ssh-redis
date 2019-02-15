@@ -33,11 +33,11 @@ For cases where access to docker exec is not possible the preferred method is to
 
 ## Quick Example
 
-Run up a container named `redis.pool-1.1.1` from the docker image `jdeathe/centos-ssh-redis` on port 6379 of your docker host.
+Run up a container named `redis.1` from the docker image `jdeathe/centos-ssh-redis` on port 6379 of your docker host.
 
 ```
 $ docker run -d \
-  --name redis.pool-1.1.1 \
+  --name redis.1 \
   -p 6379:6379/tcp \
   --sysctl "net.core.somaxconn=2048" \
   jdeathe/centos-ssh-redis:1.0.1
@@ -46,7 +46,7 @@ $ docker run -d \
 Now you can verify it is initialised and running successfully by inspecting the container's logs.
 
 ```
-$ docker logs redis.pool-1.1.1
+$ docker logs redis.1
 ```
 
 ## Instructions
@@ -60,11 +60,11 @@ In the following example the redis-server service is bound to port 6379 of the d
 #### Using environment variables
 
 ```
-$ docker stop redis.pool-1.1.1 && \
-  docker rm redis.pool-1.1.1
+$ docker stop redis.1 && \
+  docker rm redis.1
 $ docker run \
   --detach \
-  --name redis.pool-1.1.1 \
+  --name redis.1 \
   --publish 6379:6379/tcp \
   --sysctl "net.core.somaxconn=2048" \
   --sysctl "net.ipv4.ip_local_port_range=1024 65535" \
