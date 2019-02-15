@@ -20,6 +20,7 @@ CentOS-7 7.5.1804 x86_64 - Redis 4.0.
 - Removes X-Fleet section from etcd register template unit-file.
 - Removes the unused group element from the default container name.
 - Removes the node element from the default container name.
+- Removes unused environment variables from Makefile and scmi configuration.
 
 ### 2.0.1 - 2018-11-19
 
