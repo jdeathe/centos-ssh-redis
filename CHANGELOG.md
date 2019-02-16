@@ -17,11 +17,13 @@ CentOS-7 7.5.1804 x86_64 - Redis 4.0.
 - Adds consideration for event lag into test cases for unhealthy health_status events.
 - Adds port incrementation to Makefile's run template for container names with an instance suffix.
 - Adds docker-compose configuration example.
+- Adds improved logging output.
 - Removes use of `/etc/services-config` paths.
 - Removes X-Fleet section from etcd register template unit-file.
 - Removes the unused group element from the default container name.
 - Removes the node element from the default container name.
 - Removes unused environment variables from Makefile and scmi configuration.
+- Removes container log file `/var/log/redis-server-bootstrap` and `/var/log/redis/redis.log`.
 
 ### 2.0.1 - 2018-11-19
 
