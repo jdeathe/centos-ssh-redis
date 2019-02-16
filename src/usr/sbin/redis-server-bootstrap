@@ -2,36 +2,171 @@
 
 set -e
 
-readonly CONFIG_PATH="/etc/redis.conf"
-readonly LOCK_FILE="/var/lock/subsys/redis-server-bootstrap"
-readonly TIMER_START="$(
-	date +%s.%N
-)"
-readonly USER="redis"
-readonly WRAPPER="/usr/sbin/redis-server-wrapper"
-
-# Create lock file
-touch \
-	"${LOCK_FILE}"
-
-function load_config ()
+function __is_valid_redis_maxmemory ()
 {
-	local file_path="${1:-}"
+	local -r memory_units='^[1-9][0-9]*(?i)(?:kb?|mb?|gb?)$'
+	local -r value="${1}"
+
+	if [[ ${value} =~ ${memory_units} ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+function __is_valid_redis_maxmemory_policy ()
+{
+	local -r redis_policies='^(?:allkeys-lru|volatile-lru|volatile-random|allkeys-random|volatile-ttl|noeviction)$'
+	local -r redis_policies_40='^(?:allkeys-lru|volatile-lru|volatile-lfu|allkeys-lfu|volatile-random|allkeys-random|volatile-ttl|noeviction)$'
+	local -r redis_version="$(
+		__redis_version
+	)"
+	local -r redis_version_gte_40='^[4]\.[0-9]+'
+	local -r value="${1}"
+
+	if [[ ${value} =~ ${redis_policies} ]]
+	then
+		return 0
+	elif [[ ${redis_version} =~ ${redis_version_gte_40} ]] \
+		&& [[ ${value} =~ ${redis_policies_40} ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+function __is_valid_redis_maxmemory_samples ()
+{
+	local -r non_zero_integer='^[1-9][0-9]*$'
+	local -r value="${1}"
+
+	if [[ ${value} =~ ${non_zero_integer} ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+function __is_valid_redis_tcp_backlog ()
+{
+	local -r non_zero_integer='^[1-9][0-9]*$'
+	local -r value="${1}"
+
+	if [[ ${value} =~ ${non_zero_integer} ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+function __get_redis_options ()
+{
+	printf -- '%s' "${REDIS_OPTIONS}"
+}
+
+function __get_redis_maxmemory ()
+{
+	local -r default_value="${1:-64mb}"
+
+	local value="${REDIS_MAXMEMORY}"
+
+	if ! __is_valid_redis_maxmemory "${value}"
+	then
+		value="${default_value}"
+	fi
+
+	printf -- '%s' "${value}"
+}
+
+function __get_redis_maxmemory_policy ()
+{
+	local -r default_value="${1:-allkeys-lru}"
+
+	local value="${REDIS_MAXMEMORY_POLICY}"
+
+	if ! __is_valid_redis_maxmemory_policy "${value}"
+	then
+		value="${default_value}"
+	fi
+
+	printf -- '%s' "${value}"
+}
+
+function __get_redis_maxmemory_samples ()
+{
+	local -r default_value="${1:-10}"
+
+	local value="${REDIS_MAXMEMORY_SAMPLES}"
+
+	if ! __is_valid_redis_maxmemory_samples "${value}"
+	then
+		value="${default_value}"
+	fi
+
+	printf -- '%s' "${value}"
+}
+
+function __get_redis_tcp_backlog ()
+{
+	local -r default_value="${1:-1024}"
+
+	local value="${REDIS_TCP_BACKLOG}"
+
+	if ! __is_valid_redis_tcp_backlog "${value}"
+	then
+		value="${default_value}"
+	fi
+
+	printf -- '%s' "${value}"
+}
+
+function __load_config ()
+{
+	local -r file_path="${1:-}"
+	local -r maxmemory="${2:-"$(
+		__get_redis_maxmemory
+	)"}"
+	local -r maxmemory_policy="${3:-"$(
+		__get_redis_maxmemory_policy
+	)"}"
+	local -r maxmemory_samples="${4:-"$(
+		__get_redis_maxmemory_samples
+	)"}"
+	local -r tcp_backlog="${5:-"$(
+		__get_redis_tcp_backlog
+	)"}"
 
 	if [[ -n ${file_path} ]] \
 		&& [[ -s ${file_path} ]]
 	then
 		# Replace placeholders with environment variables
 		sed -i \
-			-e "s~{{REDIS_MAXMEMORY}}~${REDIS_MAXMEMORY:-64mb}~" \
-			-e "s~{{REDIS_MAXMEMORY_POLICY}}~${REDIS_MAXMEMORY_POLICY:-allkeys-lru}~" \
-			-e "s~{{REDIS_MAXMEMORY_SAMPLES}}~${REDIS_MAXMEMORY_SAMPLES:-10}~" \
-			-e "s~{{REDIS_TCP_BACKLOG}}~${REDIS_TCP_BACKLOG:-1024}~" \
+			-e "s~{{REDIS_MAXMEMORY}}~${maxmemory}~" \
+			-e "s~{{REDIS_MAXMEMORY_POLICY}}~${maxmemory_policy}~" \
+			-e "s~{{REDIS_MAXMEMORY_SAMPLES}}~${maxmemory_samples}~" \
+			-e "s~{{REDIS_TCP_BACKLOG}}~${tcp_backlog}~" \
 			"${file_path}"
 	fi
 }
 
-function set_wrapper_execute_user ()
+function __redis_version ()
+{
+	local -r version="$(
+		redis-server -v \
+		| grep -E -o 'v=[0-9\.]+' \
+		| sed 's~^v=~~'
+	)"
+
+	printf -- \
+		'%s' \
+		"${version}"
+}
+
+function __set_wrapper_execute_user ()
 {
 	local file_path="${1:-}"
 	local user="${2:-}"
@@ -45,38 +180,102 @@ function set_wrapper_execute_user ()
 		"${file_path}"
 }
 
-set_wrapper_execute_user \
-	"${WRAPPER}" \
-	"${USER}"
+function main ()
+{
+	local -r config_path="/etc/redis.conf"
+	local -r lock_file="/var/lock/subsys/redis-server-bootstrap"
+	local -r timer_start="$(
+		date +%s.%N
+	)"
+	local -r user="redis"
+	local -r wrapper="/usr/sbin/redis-server-wrapper"
 
-load_config \
-	"${CONFIG_PATH}"
+	local redis_options
+	local redis_maxmemory
+	local redis_maxmemory_policy
+	local redis_maxmemory_samples
+	local redis_tcp_backlog
+	local timer_total
+	local verbose=false
 
-TIMER_TOTAL="$(
-	echo - | awk "\
-	{ T1=\"${TIMER_START}\" } \
-	{ T2=\"$(date +%s.%N)\" } \
-	{ print T2 - T1; }"
-)"
+	# Create lock
+	touch \
+		"${lock_file}"
 
-cat \
-	<<-EOT
+	# Parse options
+	while [[ "${#}" -gt 0 ]]
+	do
+		case "${1}" in
+			-v|--verbose)
+				verbose=true
+				shift 1
+				;;
+		esac
+	done
 
-	================================================================================
-	Redis Details
-	--------------------------------------------------------------------------------
-	maxmemory : ${REDIS_MAXMEMORY:-64mb}
-	maxmemory-policy: ${REDIS_MAXMEMORY_POLICY:-allkeys-lru}
-	maxmemory-samples: ${REDIS_MAXMEMORY_SAMPLES:-5}
-	tcp-backlog: ${REDIS_TCP_BACKLOG:-1024}
-	redis-server options: ${REDIS_OPTIONS:-N/A}
-	--------------------------------------------------------------------------------
-	${TIMER_TOTAL}
+	__set_wrapper_execute_user \
+		"${wrapper}" \
+		"${user}"
 
-EOT
+	if [[ ${verbose} == true ]]
+	then
+		redis_options="$(
+			__get_redis_options
+		)"
+		redis_maxmemory="$(
+			__get_redis_maxmemory
+		)"
+		redis_maxmemory_policy="$(
+			__get_redis_maxmemory_policy
+		)"
+		redis_maxmemory_samples="$(
+			__get_redis_maxmemory_samples
+		)"
+		redis_tcp_backlog="$(
+			__get_redis_tcp_backlog
+		)"
 
-# Release lock file
-rm -f \
-	"${LOCK_FILE}"
+		__load_config \
+			"${config_path}" \
+			"${redis_maxmemory}" \
+			"${redis_maxmemory_policy}" \
+			"${redis_maxmemory_samples}" \
+			"${redis_tcp_backlog}"
 
-exit 0
+		timer_total="$(
+			awk \
+				-v timer_end="$(
+					date +%s.%N
+				)" \
+				-v timer_start="${timer_start}" \
+				'BEGIN { print \
+					timer_end - timer_start;
+				}'
+		)"
+
+		cat \
+			<<-EOT
+
+			================================================================================
+			Redis Details
+			--------------------------------------------------------------------------------
+			maxmemory : ${redis_maxmemory}
+			maxmemory-policy: ${redis_maxmemory_policy}
+			maxmemory-samples: ${redis_maxmemory_samples}
+			tcp-backlog: ${redis_tcp_backlog}
+			redis-server options: ${redis_options}
+			--------------------------------------------------------------------------------
+			${timer_total}
+
+		EOT
+	else
+		__load_config \
+			"${config_path}"
+	fi
+
+	# Release lock
+	rm -f \
+		"${lock_file}"
+}
+
+main "${@}"
