@@ -4,8 +4,6 @@ set -e
 
 readonly CONFIG_PATH="/etc/redis.conf"
 readonly LOCK_FILE="/var/lock/subsys/redis-server-bootstrap"
-readonly LOG_FILE="/var/log/redis/redis.log"
-readonly OPTIONS="${REDIS_OPTIONS:-}"
 readonly TIMER_START="$(
 	date +%s.%N
 )"
@@ -33,26 +31,6 @@ function load_config ()
 	fi
 }
 
-function set_log_write_user ()
-{
-	local file_path="${1:-}"
-	local user="${2:-}"
-
-	if [[ ! -f ${file_path} ]]
-	then
-		touch \
-			"${file_path}"
-	fi
-
-	chown \
-		"${user}":"${user}" \
-		"${file_path}"
-
-	chmod \
-		0660 \
-		"${file_path}"
-}
-
 function set_wrapper_execute_user ()
 {
 	local file_path="${1:-}"
@@ -69,10 +47,6 @@ function set_wrapper_execute_user ()
 
 set_wrapper_execute_user \
 	"${WRAPPER}" \
-	"${USER}"
-
-set_log_write_user \
-	"${LOG_FILE}" \
 	"${USER}"
 
 load_config \
