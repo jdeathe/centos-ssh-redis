@@ -1,9 +1,6 @@
-# =============================================================================
-# jdeathe/centos-ssh-redis
-#
-# CentOS-6, Redis 3.2.
-# =============================================================================
-FROM jdeathe/centos-ssh:1.9.1
+FROM jdeathe/centos-ssh:1.10.0
+
+ARG RELEASE_VERSION="1.1.0"
 
 RUN yum -y install \
 			--setopt=tsflags=nodocs \
@@ -13,46 +10,47 @@ RUN yum -y install \
 		redis32u* \
 	&& yum clean all
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copy files into place
-# -----------------------------------------------------------------------------
-ADD src/usr/bin \
-	/usr/bin/
-ADD src/usr/sbin \
-	/usr/sbin/
+# ------------------------------------------------------------------------------
+ADD src/etc \
+	/etc/
 ADD src/opt/scmi \
 	/opt/scmi/
-ADD src/etc/services-config/supervisor/supervisord.d \
-	/etc/services-config/supervisor/supervisord.d/
-ADD src/etc/systemd/system \
-	/etc/systemd/system/
+ADD src/usr \
+	/usr/
 
-RUN ln -sf \
-		/etc/services-config/supervisor/supervisord.d/redis-server-bootstrap.conf \
-		/etc/supervisord.d/redis-server-bootstrap.conf \
-	&& ln -sf \
-		/etc/services-config/supervisor/supervisord.d/redis-server-wrapper.conf \
-		/etc/supervisord.d/redis-server-wrapper.conf \
-	&& chmod 700 \
-		/usr/{bin/healthcheck,sbin/redis-server-{bootstrap,wrapper}} \
-	&& chmod 750 \
-		/usr/sbin/redis-server-wrapper \
-	&& chgrp redis \
-		/usr/sbin/redis-server-wrapper \
-	&& sed -i -r \
+# ------------------------------------------------------------------------------
+# Provisioning
+# - Insert placeholders into redis configuration file
+# - Replace placeholders with values in systemd service unit template
+# - Set permissions
+# ------------------------------------------------------------------------------
+RUN sed -i -r \
 		-e "s~^(logfile ).+$~\1\"\"~" \
 		-e "s~^(bind ).+$~\10.0.0.0~" \
 		-e "s~^(# *)?(maxmemory ).+$~\2{{REDIS_MAXMEMORY}}~" \
 		-e "s~^(# *)?(maxmemory-policy ).+$~\2{{REDIS_MAXMEMORY_POLICY}}~" \
 		-e "s~^(# *)?(maxmemory-samples ).+$~\2{{REDIS_MAXMEMORY_SAMPLES}}~" \
 		-e "s~^(tcp-backlog ).*$~\1{{REDIS_TCP_BACKLOG}}~" \
-		/etc/redis.conf
+		/etc/redis.conf \
+	&& sed -i \
+		-e "s~{{RELEASE_VERSION}}~${RELEASE_VERSION}~g" \
+		/etc/systemd/system/centos-ssh-redis@.service \
+	&& chmod 644 \
+		/etc/supervisord.d/redis-server-{bootstrap,wrapper}.conf \
+	&& chmod 700 \
+		/usr/{bin/healthcheck,sbin/redis-server-{bootstrap,wrapper}} \
+	&& chmod 750 \
+		/usr/sbin/redis-server-wrapper \
+	&& chgrp redis \
+		/usr/sbin/redis-server-wrapper
 
 EXPOSE 6379
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Set default environment variables
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 ENV REDIS_AUTOSTART_REDIS_BOOTSTRAP="true" \
 	REDIS_AUTOSTART_REDIS_WRAPPER="true" \
 	REDIS_MAXMEMORY="64mb" \
@@ -66,7 +64,6 @@ ENV REDIS_AUTOSTART_REDIS_BOOTSTRAP="true" \
 # -----------------------------------------------------------------------------
 # Set image metadata
 # -----------------------------------------------------------------------------
-ARG RELEASE_VERSION="1.0.1"
 LABEL \
 	maintainer="James Deathe <james.deathe@gmail.com>" \
 	install="docker run \
@@ -96,7 +93,7 @@ jdeathe/centos-ssh-redis:${RELEASE_VERSION} \
 	org.deathe.description="CentOS-6 6.10 x86_64 - Redis 3.2."
 
 HEALTHCHECK \
-	--interval=0.5s \
+	--interval=1s \
 	--timeout=1s \
 	--retries=4 \
 	CMD ["/usr/bin/healthcheck"]

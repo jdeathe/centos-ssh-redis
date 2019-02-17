@@ -1,0 +1,44 @@
+# ------------------------------------------------------------------------------
+# Ref: https://docs.docker.com/compose/compose-file/
+#
+# Setup:
+# docker-compose build
+# docker-compose down
+#
+# Run Default example:
+# docker-compose up -d
+#
+# Redis usage:
+# docker-compose exec redis redis-cli --help
+# docker-compose exec redis redis-cli --stat
+# docker-compose exec redis redis-cli --lru-test 512
+# docker-compose exec redis redis-cli monitor
+# ------------------------------------------------------------------------------
+version: "3.0"
+services:
+  redis:
+    build:
+      context: "."
+      dockerfile: "Dockerfile"
+    environment:
+      REDIS_AUTOSTART_REDIS_BOOTSTRAP: "true"
+      REDIS_AUTOSTART_REDIS_WRAPPER: "true"
+      REDIS_MAXMEMORY: "${REDIS_MAXMEMORY}"
+      REDIS_MAXMEMORY_POLICY: "${REDIS_MAXMEMORY_POLICY}"
+      REDIS_MAXMEMORY_SAMPLES: "${REDIS_MAXMEMORY_SAMPLES}"
+      REDIS_OPTIONS: "${REDIS_OPTIONS}"
+      REDIS_TCP_BACKLOG: "${REDIS_TCP_BACKLOG}"
+    image: "jdeathe/centos-ssh-redis:latest"
+    ports:
+      - "6379:6379"
+    restart: "always"
+    sysctls:
+      net.core.somaxconn: "1024"
+      net.ipv4.ip_local_port_range: "1024 65535"
+      net.ipv4.route.flush: "1"
+    ulimits:
+      memlock: 82000
+      nofile:
+        soft: 524288
+        hard: 1048576
+      nproc: 65535
