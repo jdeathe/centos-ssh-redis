@@ -18,6 +18,7 @@ CentOS-6 6.10 x86_64 - Redis 3.2.
 - Adds port incrementation to Makefile's run template for container names with an instance suffix.
 - Adds docker-compose configuration example.
 - Adds improved logging output.
+- Adds improved bootstrap / wrapper scripts.
 - Removes use of `/etc/services-config` paths.
 - Removes X-Fleet section from etcd register template unit-file.
 - Removes the unused group element from the default container name.
