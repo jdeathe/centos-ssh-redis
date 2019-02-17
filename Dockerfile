@@ -1,6 +1,6 @@
 FROM jdeathe/centos-ssh:1.10.0
 
-ARG RELEASE_VERSION="1.0.1"
+ARG RELEASE_VERSION="1.1.0"
 
 RUN yum -y install \
 			--setopt=tsflags=nodocs \

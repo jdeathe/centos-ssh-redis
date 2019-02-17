@@ -6,7 +6,7 @@ Summary of release changes for Version 1.
 
 CentOS-6 6.10 x86_64 - Redis 3.2.
 
-### 1.1.0 - Unreleased
+### 1.1.0 - 2019-02-17
 
 - Updates source image to [1.10.0](https://github.com/jdeathe/centos-ssh/releases/tag/1.10.0).
 - Updates and restructures Dockerfile.
