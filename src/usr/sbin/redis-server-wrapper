@@ -1,25 +1,68 @@
 #!/usr/bin/env bash
 
-readonly BIN="/usr/bin/redis-server"
-readonly CONFIG_PATH="/etc/redis.conf"
-readonly LOCK_FILE="/var/lock/subsys/redis-server-bootstrap"
-readonly NICE="/bin/nice"
-readonly NICENESS="0"
-readonly OPTIONS="${REDIS_OPTIONS:-}"
-readonly USER="redis"
+set -e
 
-while true
-do
-	sleep 0.1
-	if [[ ${REDIS_AUTOSTART_REDIS_BOOTSTRAP} == true ]] \
-		&& [[ ! -e ${LOCK_FILE} ]]
+function __is_valid_redis_autostart_redis_bootstrap ()
+{
+	local -r boolean_value='^(true|false)$'
+	local -r value="${1}"
+
+	if [[ ${value} =~ ${boolean_value} ]]
 	then
-		break
+		return 0
 	fi
-done
 
-exec ${NICE} \
-	-n ${NICENESS} \
-	${BIN} \
-	${CONFIG_PATH} \
-	${OPTIONS}
+	return 1
+}
+
+function __get_redis_autostart_redis_bootstrap ()
+{
+	local -r default_value="${1:-true}"
+
+	local value="${REDIS_AUTOSTART_REDIS_BOOTSTRAP}"
+
+	if ! __is_valid_redis_autostart_redis_bootstrap "${value}"
+	then
+		value="${default_value}"
+	fi
+
+	printf -- '%s' "${value}"
+}
+
+function __get_redis_options ()
+{
+	printf -- '%s' "${REDIS_OPTIONS}"
+}
+
+function main ()
+{
+	local -r autostart_bootstrap="$(
+		__get_redis_autostart_redis_bootstrap
+	)"
+	local -r bin="/usr/bin/redis-server"
+	local -r config_path="/etc/redis.conf"
+	local -r lock_file="/var/lock/subsys/redis-server-bootstrap"
+	local -r nice="/bin/nice"
+	local -r niceness="0"
+	local -r options="$(
+		__get_redis_options
+	)"
+
+	while true
+	do
+		sleep 0.1
+		if [[ ${autostart_bootstrap} == true ]] \
+			&& [[ ! -e ${lock_file} ]]
+		then
+			break
+		fi
+	done
+
+	exec ${nice} \
+		-n ${niceness} \
+		${bin} \
+		${config_path} \
+		${options}
+}
+
+main "${@}"
