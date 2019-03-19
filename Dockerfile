@@ -5,6 +5,7 @@ ARG RELEASE_VERSION="1.1.0"
 RUN yum -y install \
 			--setopt=tsflags=nodocs \
 			--disableplugin=fastestmirror \
+			--enablerepo=ius-archive \
 		redis32u-3.2.12-1.ius.centos6 \
 	&& yum versionlock add \
 		redis32u* \
