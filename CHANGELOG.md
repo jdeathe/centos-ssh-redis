@@ -15,6 +15,7 @@ CentOS-6 6.10 x86_64 - Redis 3.2.
 - Adds improvement to pull logic in systemd unit install template.
 - Adds `SSH_AUTOSTART_SUPERVISOR_STDOUT` with a value "false", disabling startup of `supervisor_stdout`.
 - Adds improved `healtchcheck` script.
+- Adds `docker-compose.yml` to `.dockerignore`.
 
 ### 1.1.0 - 2019-02-17
 
