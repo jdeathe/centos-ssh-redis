@@ -1,24 +1,19 @@
-FROM jdeathe/centos-ssh:1.10.0
+FROM jdeathe/centos-ssh:1.10.1
 
 ARG RELEASE_VERSION="1.1.0"
 
 RUN yum -y install \
 			--setopt=tsflags=nodocs \
 			--disableplugin=fastestmirror \
-		redis32u-3.2.12-1.ius.centos6 \
+		redis-3.2.12-2.el6 \
 	&& yum versionlock add \
-		redis32u* \
+		redis* \
 	&& yum clean all
 
 # ------------------------------------------------------------------------------
 # Copy files into place
 # ------------------------------------------------------------------------------
-ADD src/etc \
-	/etc/
-ADD src/opt/scmi \
-	/opt/scmi/
-ADD src/usr \
-	/usr/
+ADD src /
 
 # ------------------------------------------------------------------------------
 # Provisioning
@@ -59,7 +54,8 @@ ENV REDIS_AUTOSTART_REDIS_BOOTSTRAP="true" \
 	REDIS_OPTIONS="" \
 	REDIS_TCP_BACKLOG="1024" \
 	SSH_AUTOSTART_SSHD="false" \
-	SSH_AUTOSTART_SSHD_BOOTSTRAP="false"
+	SSH_AUTOSTART_SSHD_BOOTSTRAP="false" \
+	SSH_AUTOSTART_SUPERVISOR_STDOUT="false"
 
 # -----------------------------------------------------------------------------
 # Set image metadata
