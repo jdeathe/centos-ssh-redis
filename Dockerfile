@@ -1,4 +1,4 @@
-FROM jdeathe/centos-ssh:2.5.0
+FROM jdeathe/centos-ssh:2.5.1
 
 ARG RELEASE_VERSION="2.1.0"
 
@@ -16,12 +16,7 @@ RUN yum -y install \
 # ------------------------------------------------------------------------------
 # Copy files into place
 # ------------------------------------------------------------------------------
-ADD src/etc \
-	/etc/
-ADD src/opt/scmi \
-	/opt/scmi/
-ADD src/usr \
-	/usr/
+ADD src /
 
 # ------------------------------------------------------------------------------
 # Provisioning
@@ -62,7 +57,8 @@ ENV REDIS_AUTOSTART_REDIS_BOOTSTRAP="true" \
 	REDIS_OPTIONS="" \
 	REDIS_TCP_BACKLOG="1024" \
 	SSH_AUTOSTART_SSHD="false" \
-	SSH_AUTOSTART_SSHD_BOOTSTRAP="false"
+	SSH_AUTOSTART_SSHD_BOOTSTRAP="false" \
+	SSH_AUTOSTART_SUPERVISOR_STDOUT="false"
 
 # ------------------------------------------------------------------------------
 # Set image metadata
