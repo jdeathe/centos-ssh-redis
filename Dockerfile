@@ -24,6 +24,7 @@ ADD src /
 RUN sed -i -r \
 		-e "s~^(logfile ).+$~\1\"\"~" \
 		-e "s~^(bind ).+$~\10.0.0.0~" \
+		-e "s~^(save [0-9]+ [0-9]+)~#\1~" \
 		-e "s~^(# *)?(maxmemory ).+$~\2{{REDIS_MAXMEMORY}}~" \
 		-e "s~^(# *)?(maxmemory-policy ).+$~\2{{REDIS_MAXMEMORY_POLICY}}~" \
 		-e "s~^(# *)?(maxmemory-samples ).+$~\2{{REDIS_MAXMEMORY_SAMPLES}}~" \

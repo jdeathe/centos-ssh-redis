@@ -259,10 +259,10 @@ function main ()
 			Redis Details
 			--------------------------------------------------------------------------------
 			maxmemory : ${redis_maxmemory}
-			maxmemory-policy: ${redis_maxmemory_policy}
-			maxmemory-samples: ${redis_maxmemory_samples}
-			tcp-backlog: ${redis_tcp_backlog}
-			redis-server options: ${redis_options}
+			maxmemory-policy : ${redis_maxmemory_policy}
+			maxmemory-samples : ${redis_maxmemory_samples}
+			tcp-backlog : ${redis_tcp_backlog}
+			redis-server options : ${redis_options}
 			--------------------------------------------------------------------------------
 			${timer_total}
 
