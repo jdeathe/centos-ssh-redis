@@ -6,6 +6,18 @@ Summary of release changes for Version 1.
 
 CentOS-6 6.10 x86_64 - Redis 3.2.
 
+### 1.1.1 - 2019-03-21
+
+- Updates source image to [1.10.1](https://github.com/jdeathe/centos-ssh/releases/tag/1.10.1).
+- Updates Redis package to `redis-3.2.12-2` from the EPEL repository.
+- Updates Dockerfile with combined ADD to reduce layer count in final image.
+- Fixes binary paths in systemd unit files for compatibility with both EL and Ubuntu hosts.
+- Adds improvement to pull logic in systemd unit install template.
+- Adds `SSH_AUTOSTART_SUPERVISOR_STDOUT` with a value "false", disabling startup of `supervisor_stdout`.
+- Adds improved `healtchcheck` script.
+- Adds `docker-compose.yml` to `.dockerignore`.
+- Disables disk persistence by default; primary use-case being an LRU cache.
+
 ### 1.1.0 - 2019-02-17
 
 - Updates source image to [1.10.0](https://github.com/jdeathe/centos-ssh/releases/tag/1.10.0).
