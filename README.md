@@ -8,12 +8,12 @@ Docker Image including:
 
 ## Overview & links
 
-The latest CentOS-6 / CentOS-7 based releases can be pulled from the `centos-6` / `centos-7` Docker tags respectively. For production use it is recommended to select a specific release tag - the convention is `centos-6-1.1.0` OR `1.1.0` for the [1.1.0](https://github.com/jdeathe/centos-ssh-redis/tree/1.1.0) release tag and `centos-7-2.1.0` OR `2.1.0` for the [2.1.0](https://github.com/jdeathe/centos-ssh-redis/tree/2.1.0) release tag.
+The latest CentOS-6 / CentOS-7 based releases can be pulled from the `centos-6` / `centos-7` Docker tags respectively. For production use it is recommended to select a specific release tag - the convention is `centos-6-1.1.1` OR `1.1.1` for the [1.1.1](https://github.com/jdeathe/centos-ssh-redis/tree/1.1.1) release tag and `centos-7-2.1.1` OR `2.1.1` for the [2.1.1](https://github.com/jdeathe/centos-ssh-redis/tree/2.1.1) release tag.
 
 ### Tags and respective `Dockerfile` links
 
-- `centos-7`,`centos-7-2.1.0`,`2.1.0` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7/Dockerfile)
-- `centos-6`,`centos-6-1.1.0`,`1.1.0` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-6/Dockerfile)
+- `centos-7`,`centos-7-2.1.1`,`2.1.1` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7/Dockerfile)
+- `centos-6`,`centos-6-1.1.1`,`1.1.1` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-6/Dockerfile)
 
 Included in the build are the [SCL](https://www.softwarecollections.org/), [EPEL](http://fedoraproject.org/wiki/EPEL) and [IUS](https://ius.io) repositories. Installed packages include [OpenSSH](http://www.openssh.com/portable.html) secure shell, [vim-minimal](http://www.vim.org/), are installed along with python-setuptools, [supervisor](http://supervisord.org/) and [supervisor-stdout](https://github.com/coderanger/supervisor-stdout).
 
@@ -40,7 +40,7 @@ $ docker run -d \
   --name redis.1 \
   -p 6379:6379/tcp \
   --sysctl "net.core.somaxconn=1024" \
-  jdeathe/centos-ssh-redis:2.1.0
+  jdeathe/centos-ssh-redis:2.1.1
 ```
 
 Now you can verify it is initialised and running successfully by inspecting the container's logs.
@@ -74,7 +74,7 @@ $ docker run \
   --env "REDIS_MAXMEMORY_SAMPLES=10" \
   --env "REDIS_OPTIONS=--loglevel verbose" \
   --env "REDIS_TCP_BACKLOG=2048" \
-  jdeathe/centos-ssh-redis:2.1.0
+  jdeathe/centos-ssh-redis:2.1.1
 ```
 
 #### Environment Variables

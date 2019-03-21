@@ -6,7 +6,7 @@ Summary of release changes for Version 2.
 
 CentOS-7 7.5.1804 x86_64 - Redis 4.0.
 
-### 2.1.1 - Unreleased
+### 2.1.1 - 2019-03-21
 
 - **Notice: This will be the last Version 2 release. The Version 3 release will be based on EPEL `redis` packages (i.e Redis 3.2). Version 4 will be based on IUS `redis40u` packages (i.e Redis 4.0).**
 - Updates source image to [2.5.1](https://github.com/jdeathe/centos-ssh/releases/tag/2.5.1).
