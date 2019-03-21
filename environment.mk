@@ -6,8 +6,8 @@ DOCKER_IMAGE_NAME := centos-ssh-redis
 SHPEC_ROOT := test/shpec
 
 # Tag validation patterns
-DOCKER_IMAGE_TAG_PATTERN := ^(latest|centos-[6-7]|((1|2|centos-(6-1|7-2))\.[0-9]+\.[0-9]+))$
-DOCKER_IMAGE_RELEASE_TAG_PATTERN := ^(1|2|centos-(6-1|7-2))\.[0-9]+\.[0-9]+$
+DOCKER_IMAGE_TAG_PATTERN := ^(latest|centos-[6-7]|centos-7-redis40u|((1|3|4|centos-(6-1|7-3|7-redis40u-4))\.[0-9]+\.[0-9]+))$
+DOCKER_IMAGE_RELEASE_TAG_PATTERN := ^(1|3|4|centos-(6-1|7-3|7-redis40u-4))\.[0-9]+\.[0-9]+$
 
 # ------------------------------------------------------------------------------
 # Variables
