@@ -41,7 +41,7 @@ $ docker run -d \
   --name redis.1 \
   -p 6379:6379/tcp \
   --sysctl "net.core.somaxconn=1024" \
-  jdeathe/centos-ssh-redis:2.1.1
+  jdeathe/centos-ssh-redis:4.0.0
 ```
 
 Now you can verify it is initialised and running successfully by inspecting the container's logs.
@@ -75,7 +75,7 @@ $ docker run \
   --env "REDIS_MAXMEMORY_SAMPLES=10" \
   --env "REDIS_OPTIONS=--loglevel verbose" \
   --env "REDIS_TCP_BACKLOG=2048" \
-  jdeathe/centos-ssh-redis:2.1.1
+  jdeathe/centos-ssh-redis:4.0.0
 ```
 
 #### Environment Variables
