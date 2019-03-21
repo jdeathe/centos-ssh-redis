@@ -6,6 +6,18 @@ Summary of release changes for Version 2.
 
 CentOS-7 7.5.1804 x86_64 - Redis 4.0.
 
+### 2.1.1 - 2019-03-21
+
+- **Notice: This will be the last Version 2 release. The Version 3 release will be based on EPEL `redis` packages (i.e Redis 3.2). Version 4 will be based on IUS `redis40u` packages (i.e Redis 4.0).**
+- Updates source image to [2.5.1](https://github.com/jdeathe/centos-ssh/releases/tag/2.5.1).
+- Updates Dockerfile with combined ADD to reduce layer count in final image.
+- Fixes binary paths in systemd unit files for compatibility with both EL and Ubuntu hosts.
+- Adds improvement to pull logic in systemd unit install template.
+- Adds `SSH_AUTOSTART_SUPERVISOR_STDOUT` with a value "false", disabling startup of `supervisor_stdout`.
+- Adds improved `healtchcheck` script.
+- Adds `docker-compose.yml` to `.dockerignore`.
+- Disables disk persistence by default; primary use-case being an LRU cache.
+
 ### 2.1.0 - 2019-02-17
 
 - Updates source image to [2.5.0](https://github.com/jdeathe/centos-ssh/releases/tag/2.5.0).
