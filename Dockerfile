@@ -87,7 +87,7 @@ jdeathe/centos-ssh-redis:${RELEASE_VERSION} \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-redis" \
-	org.deathe.description="CentOS-6 6.10 x86_64 - Redis 3.2."
+	org.deathe.description="CentOS-6 6.10 x86_64 - EPEL Redis 3.2."
 
 HEALTHCHECK \
 	--interval=1s \

@@ -5,8 +5,8 @@ readonly DOCKER_USER=jdeathe
 readonly DOCKER_IMAGE_NAME=centos-ssh-redis
 
 # Tag validation patterns
-readonly DOCKER_IMAGE_TAG_PATTERN='^(latest|centos-6|((1|centos-6-1)\.[0-9]+\.[0-9]+))$'
-readonly DOCKER_IMAGE_RELEASE_TAG_PATTERN='^(1|centos-6-1)\.[0-9]+\.[0-9]+$'
+readonly DOCKER_IMAGE_TAG_PATTERN='^(latest|centos-[6-7]|centos-7-redis40u|((1|3|4|centos-(6-1|7-3|7-redis40u-4))\.[0-9]+\.[0-9]+))$'
+readonly DOCKER_IMAGE_RELEASE_TAG_PATTERN='^(1|3|4|centos-(6-1|7-3|7-redis40u-4))\.[0-9]+\.[0-9]+$'
 
 # ------------------------------------------------------------------------------
 # Variables

@@ -4,7 +4,7 @@
 
 Summary of release changes for Version 1.
 
-CentOS-6 6.10 x86_64 - Redis 3.2.
+CentOS-6 6.10 x86_64 - EPEL Redis 3.2.
 
 ### 1.1.1 - 2019-03-21
 
