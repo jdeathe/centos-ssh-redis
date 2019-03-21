@@ -11,7 +11,7 @@ Docker Image including:
 
 ### Tags and respective `Dockerfile` links
 
-- `centos-7`,`centos-7-redis40u-4.0.0`,`4.0.0` [(centos-7-redis40u/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7-redis40u/Dockerfile)
+- `centos-7-redis40u`,`centos-7-redis40u-4.0.0`,`4.0.0` [(centos-7-redis40u/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7-redis40u/Dockerfile)
 - `centos-7`,`centos-7-3.0.0`,`3.0.0` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7/Dockerfile)
 - `centos-6`,`centos-6-1.1.1`,`1.1.1` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-6/Dockerfile)
 
