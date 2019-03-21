@@ -8,7 +8,7 @@ ARG RELEASE_VERSION="3.0.0"
 RUN yum -y install \
 			--setopt=tsflags=nodocs \
 			--disableplugin=fastestmirror \
-		redis-3.2.12-2.el6 \
+		redis-3.2.12-2.el7 \
 	&& yum versionlock add \
 		redis* \
 	&& yum clean all
