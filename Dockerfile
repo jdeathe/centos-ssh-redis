@@ -8,7 +8,7 @@ ARG RELEASE_VERSION="4.0.0"
 RUN yum -y install \
 			--setopt=tsflags=nodocs \
 			--disableplugin=fastestmirror \
-		redis40u-4.0.11-1.ius.centos7  \
+		redis40u-4.0.13-1.ius.centos7 \
 	&& yum versionlock add \
 		redis40u* \
 	&& yum clean all
