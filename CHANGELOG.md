@@ -6,7 +6,7 @@ Summary of release changes for Version 1.
 
 CentOS-6 6.10 x86_64 - Redis 3.2.
 
-### 1.1.1 - Unreleased
+### 1.1.1 - 2019-03-21
 
 - Updates source image to [1.10.1](https://github.com/jdeathe/centos-ssh/releases/tag/1.10.1).
 - Updates Redis package to `redis-3.2.12-2` from the EPEL repository.
