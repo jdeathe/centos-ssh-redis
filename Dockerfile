@@ -1,6 +1,6 @@
 FROM jdeathe/centos-ssh:2.5.1
 
-ARG RELEASE_VERSION="2.1.1"
+ARG RELEASE_VERSION="4.0.0"
 
 # ------------------------------------------------------------------------------
 # Base install of required packages
@@ -8,7 +8,7 @@ ARG RELEASE_VERSION="2.1.1"
 RUN yum -y install \
 			--setopt=tsflags=nodocs \
 			--disableplugin=fastestmirror \
-		redis40u-4.0.11-1.ius.centos7  \
+		redis40u-4.0.13-1.ius.centos7 \
 	&& yum versionlock add \
 		redis40u* \
 	&& yum clean all
@@ -90,7 +90,7 @@ jdeathe/centos-ssh-redis:${RELEASE_VERSION} \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-redis" \
-	org.deathe.description="CentOS-7 7.5.1804 x86_64 - Redis 4.0."
+	org.deathe.description="CentOS-7 7.5.1804 x86_64 - IUS Redis 4.0."
 
 HEALTHCHECK \
 	--interval=1s \
