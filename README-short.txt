@@ -1,1 +1,1 @@
-CentOS-7 7.5.1804 x86_64 - Redis.
+Redis - CentOS.
