@@ -2,64 +2,40 @@
 
 set -e
 
-function __is_valid_redis_maxmemory ()
+function __cleanup ()
 {
-	local -r memory_units='^[1-9][0-9]*(kb?|mb?|gb?|KB?|MB?|GB?)$'
-	local -r value="${1}"
-	if [[ ${value} =~ ${memory_units} ]]
-	then
-		return 0
-	fi
+	local -r exit_code="${?}"
 
-	return 1
+	__delete_lock
+
+	if [[ ${exit_code} -eq 0 ]]
+	then
+		__create_state
+	fi
 }
 
-function __is_valid_redis_maxmemory_policy ()
+function __create_lock ()
 {
-	local -r redis_policies='^(allkeys-lru|volatile-lru|volatile-random|allkeys-random|volatile-ttl|noeviction)$'
-	local -r redis_policies_40='^(allkeys-lru|volatile-lru|volatile-lfu|allkeys-lfu|volatile-random|allkeys-random|volatile-ttl|noeviction)$'
-	local -r redis_version="$(
-		__redis_version
-	)"
-	local -r redis_version_gte_40='^[4]\.[0-9]+'
-	local -r value="${1}"
-
-	if [[ ${value} =~ ${redis_policies} ]]
+	if [[ -n ${lock_file} ]]
 	then
-		return 0
-	elif [[ ${redis_version} =~ ${redis_version_gte_40} ]] \
-		&& [[ ${value} =~ ${redis_policies_40} ]]
-	then
-		return 0
+		touch "${lock_file}"
 	fi
-
-	return 1
 }
 
-function __is_valid_redis_maxmemory_samples ()
+function __create_state ()
 {
-	local -r non_zero_integer='^[1-9][0-9]*$'
-	local -r value="${1}"
-
-	if [[ ${value} =~ ${non_zero_integer} ]]
+	if [[ -n ${state_file} ]]
 	then
-		return 0
+		touch "${state_file}"
 	fi
-
-	return 1
 }
 
-function __is_valid_redis_tcp_backlog ()
+function __delete_lock ()
 {
-	local -r non_zero_integer='^[1-9][0-9]*$'
-	local -r value="${1}"
-
-	if [[ ${value} =~ ${non_zero_integer} ]]
+	if [[ -f ${lock_file} ]]
 	then
-		return 0
+		rm -f "${lock_file}"
 	fi
-
-	return 1
 }
 
 function __get_redis_options ()
@@ -123,9 +99,94 @@ function __get_redis_tcp_backlog ()
 	printf -- '%s' "${value}"
 }
 
+function __get_timer_total ()
+{
+	local -r timer_end="$(
+		date -u +%s.%N
+	)"
+	local -r timer_start="${1}"
+
+	if [[ -z ${timer_start} ]] \
+		|| [[ ${timer_start//.} -gt ${timer_end//.} ]]
+	then
+		>&2 printf -- \
+			'ERROR: invalid timer start: %s\n' \
+			"${timer_start}"
+		printf -- \
+			'0.000000'
+	else
+		awk \
+			-v timer_end="${timer_end}" \
+			-v timer_start="${timer_start}" \
+			'BEGIN { print \
+				timer_end - timer_start;
+			}'
+	fi
+}
+
+function __is_valid_redis_maxmemory ()
+{
+	local -r memory_units='^[1-9][0-9]*(kb?|mb?|gb?|KB?|MB?|GB?)$'
+	local -r value="${1}"
+	if [[ ${value} =~ ${memory_units} ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+function __is_valid_redis_maxmemory_policy ()
+{
+	local -r redis_policies='^(allkeys-lru|volatile-lru|volatile-random|allkeys-random|volatile-ttl|noeviction)$'
+	local -r redis_policies_40='^(allkeys-lru|volatile-lru|volatile-lfu|allkeys-lfu|volatile-random|allkeys-random|volatile-ttl|noeviction)$'
+	local -r redis_version="$(
+		__redis_version
+	)"
+	local -r redis_version_gte_40='^[4]\.[0-9]+'
+	local -r value="${1}"
+
+	if [[ ${value} =~ ${redis_policies} ]]
+	then
+		return 0
+	elif [[ ${redis_version} =~ ${redis_version_gte_40} ]] \
+		&& [[ ${value} =~ ${redis_policies_40} ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+function __is_valid_redis_maxmemory_samples ()
+{
+	local -r non_zero_integer='^[1-9][0-9]*$'
+	local -r value="${1}"
+
+	if [[ ${value} =~ ${non_zero_integer} ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
+function __is_valid_redis_tcp_backlog ()
+{
+	local -r non_zero_integer='^[1-9][0-9]*$'
+	local -r value="${1}"
+
+	if [[ ${value} =~ ${non_zero_integer} ]]
+	then
+		return 0
+	fi
+
+	return 1
+}
+
 function __load_config ()
 {
-	local -r file_path="${1:-}"
+	local -r file_path="${1}"
 	local -r maxmemory="${2:-"$(
 		__get_redis_maxmemory
 	)"}"
@@ -139,10 +200,8 @@ function __load_config ()
 		__get_redis_tcp_backlog
 	)"}"
 
-	if [[ -n ${file_path} ]] \
-		&& [[ -s ${file_path} ]]
+	if [[ -s ${file_path} ]]
 	then
-		# Replace placeholders with environment variables
 		sed -i \
 			-e "s~{{REDIS_MAXMEMORY}}~${maxmemory}~" \
 			-e "s~{{REDIS_MAXMEMORY_POLICY}}~${maxmemory_policy}~" \
@@ -167,8 +226,8 @@ function __redis_version ()
 
 function __set_wrapper_execute_user ()
 {
-	local file_path="${1:-}"
-	local user="${2:-}"
+	local file_path="${1}"
+	local user="${2}"
 
 	chgrp \
 		"${user}" \
@@ -179,12 +238,32 @@ function __set_wrapper_execute_user ()
 		"${file_path}"
 }
 
+function __set_wrapper_lock_directory ()
+{
+	local user="${1}"
+
+	local lock_path="/var/lock/${user}"
+
+	if [[ ! -d ${lock_path} ]]
+	then
+		mkdir \
+			-p \
+			-m 755 \
+			"${lock_path}"
+	fi
+
+	chown \
+		"${user}:${user}" \
+		"${lock_path}"
+}
+
 function main ()
 {
 	local -r config_path="/etc/redis.conf"
 	local -r lock_file="/var/lock/subsys/redis-server-bootstrap"
+	local -r state_file="/var/lib/misc/redis-server-bootstrap"
 	local -r timer_start="$(
-		date +%s.%N
+		date -u +%s.%N
 	)"
 	local -r user="redis"
 	local -r wrapper="/usr/sbin/redis-server-wrapper"
@@ -195,25 +274,34 @@ function main ()
 	local redis_maxmemory_samples
 	local redis_tcp_backlog
 	local timer_total
-	local verbose=false
+	local verbose="false"
 
-	# Create lock
-	touch \
-		"${lock_file}"
-
-	# Parse options
 	while [[ "${#}" -gt 0 ]]
 	do
 		case "${1}" in
 			-v|--verbose)
-				verbose=true
+				verbose="true"
 				shift 1
 				;;
 		esac
 	done
 
+	if [[ -f ${lock_file} ]]
+	then
+		>&2 printf -- \
+			'ERROR: %s lock detected - aborting.\n' \
+			"${0##*/}"
+		exit 1
+	fi
+
+	trap "__cleanup" \
+		INT TERM EXIT
+	__create_lock
+
 	__set_wrapper_execute_user \
 		"${wrapper}" \
+		"${user}"
+	__set_wrapper_lock_directory \
 		"${user}"
 
 	if [[ ${verbose} == true ]]
@@ -242,14 +330,8 @@ function main ()
 			"${redis_tcp_backlog}"
 
 		timer_total="$(
-			awk \
-				-v timer_end="$(
-					date +%s.%N
-				)" \
-				-v timer_start="${timer_start}" \
-				'BEGIN { print \
-					timer_end - timer_start;
-				}'
+			__get_timer_total \
+				"${timer_start}"
 		)"
 
 		cat \
@@ -272,9 +354,8 @@ function main ()
 			"${config_path}"
 	fi
 
-	# Release lock
-	rm -f \
-		"${lock_file}"
+	# Trigger cleanup trap.
+	exit 0
 }
 
 main "${@}"
