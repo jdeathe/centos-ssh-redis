@@ -4,7 +4,7 @@
 
 Summary of release changes.
 
-### 1.2.0 - Unreleased
+### 1.2.0 - 2019-06-29
 
 - Updates source image to [1.11.0](https://github.com/jdeathe/centos-ssh/releases/tag/1.11.0).
 - Updates CHANGELOG.md to simplify maintenance.
