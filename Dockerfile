@@ -1,6 +1,6 @@
-FROM jdeathe/centos-ssh:2.5.1
+FROM jdeathe/centos-ssh:2.6.0
 
-ARG RELEASE_VERSION="3.0.0"
+ARG RELEASE_VERSION="4.0.0"
 
 # ------------------------------------------------------------------------------
 # Base install of required packages
@@ -37,7 +37,7 @@ RUN sed -i -r \
 		-e "s~{{RELEASE_VERSION}}~${RELEASE_VERSION}~g" \
 		/etc/systemd/system/centos-ssh-redis@.service \
 	&& chmod 644 \
-		/etc/supervisord.d/redis-server-{bootstrap,wrapper}.conf \
+		/etc/supervisord.d/{20-redis-server-bootstrap,50-redis-server-wrapper}.conf \
 	&& chmod 700 \
 		/usr/{bin/healthcheck,sbin/redis-server-{bootstrap,wrapper}} \
 	&& chmod 750 \
@@ -50,16 +50,17 @@ EXPOSE 6379
 # ------------------------------------------------------------------------------
 # Set default environment variables
 # ------------------------------------------------------------------------------
-ENV REDIS_AUTOSTART_REDIS_BOOTSTRAP="true" \
-	REDIS_AUTOSTART_REDIS_WRAPPER="true" \
+ENV \
+	ENABLE_REDIS_BOOTSTRAP="true" \
+	ENABLE_REDIS_WRAPPER="true" \
+	ENABLE_SSHD_BOOTSTRAP="false" \
+	ENABLE_SSHD_WRAPPER="false" \
+	ENABLE_SUPERVISOR_STDOUT="false" \
 	REDIS_MAXMEMORY="64mb" \
 	REDIS_MAXMEMORY_POLICY="allkeys-lru" \
 	REDIS_MAXMEMORY_SAMPLES="5" \
 	REDIS_OPTIONS="" \
-	REDIS_TCP_BACKLOG="1024" \
-	SSH_AUTOSTART_SSHD="false" \
-	SSH_AUTOSTART_SSHD_BOOTSTRAP="false" \
-	SSH_AUTOSTART_SUPERVISOR_STDOUT="false"
+	REDIS_TCP_BACKLOG="1024"
 
 # ------------------------------------------------------------------------------
 # Set image metadata
@@ -90,7 +91,7 @@ jdeathe/centos-ssh-redis:${RELEASE_VERSION} \
 	org.deathe.license="MIT" \
 	org.deathe.vendor="jdeathe" \
 	org.deathe.url="https://github.com/jdeathe/centos-ssh-redis" \
-	org.deathe.description="CentOS-7 7.5.1804 x86_64 - EPEL Redis 3.2."
+	org.deathe.description="EPEL Redis 3.2. - CentOS-7 7.6.1810 x86_64."
 
 HEALTHCHECK \
 	--interval=1s \
