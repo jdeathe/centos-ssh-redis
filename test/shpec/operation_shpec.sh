@@ -439,7 +439,7 @@ function test_custom_configuration ()
 					--name redis.2 \
 					--network-alias redis.2 \
 					--network ${private_network_1} \
-					--env REDIS_AUTOSTART_REDIS_WRAPPER=false \
+					--env ENABLE_REDIS_WRAPPER=false \
 					jdeathe/centos-ssh-redis:latest \
 				&> /dev/null
 
@@ -545,7 +545,7 @@ function test_custom_configuration ()
 		docker run \
 			--detach \
 			--name redis.1 \
-			--env REDIS_AUTOSTART_REDIS_WRAPPER=false \
+			--env ENABLE_REDIS_WRAPPER=false \
 			jdeathe/centos-ssh-redis:latest \
 		&> /dev/null
 
@@ -572,7 +572,7 @@ function test_custom_configuration ()
 		docker run \
 			--detach \
 			--name redis.1 \
-			--env REDIS_AUTOSTART_REDIS_BOOTSTRAP=false \
+			--env ENABLE_REDIS_BOOTSTRAP=false \
 			jdeathe/centos-ssh-redis:latest \
 		&> /dev/null
 

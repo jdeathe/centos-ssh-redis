@@ -2,6 +2,7 @@
 # Ref: https://docs.docker.com/compose/compose-file/
 #
 # Setup:
+# Copy .env.example to .env and modify values as required.
 # docker-compose build
 # docker-compose down
 #
@@ -21,13 +22,14 @@ services:
       context: "."
       dockerfile: "Dockerfile"
     environment:
-      REDIS_AUTOSTART_REDIS_BOOTSTRAP: "true"
-      REDIS_AUTOSTART_REDIS_WRAPPER: "true"
+      ENABLE_REDIS_BOOTSTRAP: "true"
+      ENABLE_REDIS_WRAPPER: "true"
       REDIS_MAXMEMORY: "${REDIS_MAXMEMORY}"
       REDIS_MAXMEMORY_POLICY: "${REDIS_MAXMEMORY_POLICY}"
       REDIS_MAXMEMORY_SAMPLES: "${REDIS_MAXMEMORY_SAMPLES}"
       REDIS_OPTIONS: "${REDIS_OPTIONS}"
       REDIS_TCP_BACKLOG: "${REDIS_TCP_BACKLOG}"
+      SYSTEM_TIMEZONE: "${SYSTEM_TIMEZONE}"
     image: "jdeathe/centos-ssh-redis:latest"
     ports:
       - "6379:6379"
