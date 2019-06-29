@@ -1,8 +1,8 @@
 ## Tags and respective `Dockerfile` links
 
-- `centos-7-redis40u`,[`4.0.0`](https://github.com/jdeathe/centos-ssh-redis/tree/4.0.0) [(centos-7-redis40u/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7-redis40u/Dockerfile)
-- `centos-7`,[`3.0.0`](https://github.com/jdeathe/centos-ssh-redis/tree/3.0.0) [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7/Dockerfile)
-- `centos-6`,[`1.1.1`](https://github.com/jdeathe/centos-ssh-redis/tree/1.1.1) [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-6/Dockerfile)
+- `centos-7-redis40u`,[`4.1.0`](https://github.com/jdeathe/centos-ssh-redis/tree/4.1.0) [(centos-7-redis40u/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7-redis40u/Dockerfile)
+- `centos-7`,[`3.1.0`](https://github.com/jdeathe/centos-ssh-redis/tree/3.1.0) [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7/Dockerfile)
+- `centos-6`,[`1.2.0`](https://github.com/jdeathe/centos-ssh-redis/tree/1.2.0) [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-6/Dockerfile)
 
 ## Overview
 
@@ -25,7 +25,7 @@ $ docker run -d \
   --name redis.1 \
   -p 6379:6379/tcp \
   --sysctl "net.core.somaxconn=1024" \
-  jdeathe/centos-ssh-redis:3.0.0
+  jdeathe/centos-ssh-redis:3.1.0
 ```
 
 Verify the named container's process status and health.
@@ -76,7 +76,7 @@ $ docker stop redis.1 && \
   --env "REDIS_MAXMEMORY_SAMPLES=10" \
   --env "REDIS_OPTIONS=--loglevel verbose" \
   --env "REDIS_TCP_BACKLOG=2048" \
-  jdeathe/centos-ssh-redis:3.0.0
+  jdeathe/centos-ssh-redis:3.1.0
 ```
 
 #### Environment Variables
