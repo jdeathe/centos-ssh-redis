@@ -1,8 +1,8 @@
 ## Tags and respective `Dockerfile` links
 
-- `centos-7-redis40u`,[`4.1.0`](https://github.com/jdeathe/centos-ssh-redis/tree/4.1.0) [(centos-7-redis40u/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7-redis40u/Dockerfile)
-- `centos-7`,[`3.1.0`](https://github.com/jdeathe/centos-ssh-redis/tree/3.1.0) [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7/Dockerfile)
-- `centos-6`,[`1.2.0`](https://github.com/jdeathe/centos-ssh-redis/tree/1.2.0) [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-6/Dockerfile)
+- [`4.1.0`](https://github.com/jdeathe/centos-ssh-redis/tree/4.1.0),`centos-7-redis40u` [(centos-7-redis40u/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7-redis40u/Dockerfile)
+- [`3.1.0`](https://github.com/jdeathe/centos-ssh-redis/tree/3.1.0),`centos-7` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7/Dockerfile)
+- [`1.2.0`](https://github.com/jdeathe/centos-ssh-redis/tree/1.2.0),`centos-6` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-6/Dockerfile)
 
 ## Overview
 
@@ -32,7 +32,7 @@ Verify the named container's process status and health.
 
 ```
 $ docker ps -a \
-	-f "name=redis.1"
+  -f "name=redis.1"
 ```
 
 Verify successful initialisation of the named container.
@@ -63,7 +63,7 @@ In the following example the redis-server service is bound to port 6379 of the d
 
 ```
 $ docker stop redis.1 && \
-  docker rm redis.1 && \
+  docker rm redis.1; \
   docker run \
   --detach \
   --name redis.1 \
@@ -79,7 +79,7 @@ $ docker stop redis.1 && \
   jdeathe/centos-ssh-redis:4.1.0
 ```
 
-#### Environment Variables
+#### Environment variables
 
 Environment variables are available, as detailed below, to allow the operator to configure a container on run. Environment variable values cannot be changed after running the container; it's a one-shot type setting. If you need to change a value you have to terminate, (i.e stop and remove), and replace the running container.
 
