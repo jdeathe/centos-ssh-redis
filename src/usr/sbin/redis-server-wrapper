@@ -17,7 +17,7 @@ function __create_lock ()
 
 function __delete_lock ()
 {
-	if [[ -e ${lock_file} ]]
+	if [[ -f ${lock_file} ]]
 	then
 		rm -f "${lock_file}"
 	fi
@@ -37,6 +37,14 @@ function __get_options ()
 		"${options}"
 }
 
+function __get_proxy ()
+{
+	printf -- \
+		'%s -n %s' \
+		"${nice}" \
+		"${niceness}"
+}
+
 function __get_redis_options ()
 {
 	printf -- '%s' "${REDIS_OPTIONS}"
@@ -52,6 +60,7 @@ function main ()
 	local -r niceness="0"
 
 	local options
+	local proxy
 	local verbose="false"
 
 	while [[ "${#}" -gt 0 ]]
@@ -64,7 +73,7 @@ function main ()
 		esac
 	done
 
-	if [[ -e ${lock_file} ]]
+	if [[ -f ${lock_file} ]]
 	then
 		>&2 printf -- \
 			'ERROR: %s lock detected - aborting\n' \
@@ -79,8 +88,12 @@ function main ()
 	options="$(
 		__get_options
 	)"
+	proxy="$(
+		__get_proxy
+	)"
 
-	if [[ ${verbose} == true ]]
+	if [[ ${verbose} == true ]] \
+		&& [[ ! -f ${bootstrap_state_file} ]]
 	then
 		printf -- \
 			'INFO: %s waiting on %s\n' \
@@ -122,8 +135,7 @@ function main ()
 	trap - \
 		EXIT INT TERM
 
-	exec ${nice} \
-		-n ${niceness} \
+	exec ${proxy} \
 		${bin} \
 		${options}
 }
