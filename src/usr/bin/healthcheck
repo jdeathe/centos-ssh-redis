@@ -46,16 +46,16 @@ function main ()
 	if ! ps axo command | grep -qE '^/usr/bin/python /usr/bin/supervisord'
 	then
 		>&2 printf -- \
-			'%s\n' \
-			"supervisord not running."
+			'%s' \
+			"supervisord not running"
 		exit 1
 	fi
 
 	if [[ ${system_timezone} != "${zone}" ]]
 	then
 		>&2 printf -- \
-			'%s\n' \
-			"system-timezone zone mismatch."
+			'%s' \
+			"system-timezone zone mismatch"
 		exit 1
 	fi
 
@@ -69,16 +69,16 @@ function main ()
 	if ! ps axo command | grep -qE '^/usr/bin/redis-server'
 	then
 		>&2 printf -- \
-			'%s\n' \
-			"redis-server not running."
+			'%s' \
+			"redis-server not running"
 		exit 1
 	fi
 
 	if ! redis-cli PING | grep -qE '^PONG$'
 	then
 		>&2 printf -- \
-			'%s\n' \
-			"redis-server not responding."
+			'%s' \
+			"redis-server not responding"
 		exit 1
 	fi
 }
