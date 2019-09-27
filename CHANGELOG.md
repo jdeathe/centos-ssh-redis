@@ -4,6 +4,24 @@
 
 Summary of release changes.
 
+### 4.1.1 - Unreleased
+
+- Deprecate Makefile target `logs-delayed`; replaced with `logsdef`.
+- Updates source image to [2.6.1](https://github.com/jdeathe/centos-ssh/releases/tag/2.6.1).
+- Updates `redis40u` packages to 4.0.14-2.
+- Updates `test/health_status` helper script with for consistency.
+- Updates Makefile target `logs` to accept `[OPTIONS]` (e.g `make -- logs -ft`).
+- Updates info/error output for consistency.
+- Updates healthcheck failure messages to remove EOL character that is rendered in status response.
+- Updates ordering of Tags and respective Dockerfile links in README.md for readability.
+- Adds improved test workflow; added `test-setup` target to Makefile.
+- Adds Makefile target `logsdef` to handle deferred logs output within a target chain.
+- Adds exec proxy function to `redis-server-wrapper` used to pass through nice.
+- Adds `/docs` directory for supplementary documentation.
+- Fixes validation failure of 0 second --timeout value in `test/health_status`.
+- Removes `ENABLE_REDIS_BOOTSTRAP` from docker-compose example configuration.
+- Removes `ENABLE_REDIS_WRAPPER` from docker-compose example configuration.
+
 ### 4.1.0 - 2019-06-29
 
 - Updates source image to [2.6.0](https://github.com/jdeathe/centos-ssh/releases/tag/2.6.0).

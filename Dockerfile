@@ -1,4 +1,4 @@
-FROM jdeathe/centos-ssh:2.6.0
+FROM jdeathe/centos-ssh:2.6.1
 
 ARG RELEASE_VERSION="4.1.0"
 
@@ -8,7 +8,7 @@ ARG RELEASE_VERSION="4.1.0"
 RUN yum -y install \
 			--setopt=tsflags=nodocs \
 			--disableplugin=fastestmirror \
-		redis40u-4.0.14-1.ius.el7 \
+		redis40u-4.0.14-2.el7.ius \
 	&& yum versionlock add \
 		redis40u* \
 	&& yum clean all
