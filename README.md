@@ -1,8 +1,8 @@
 ## Tags and respective `Dockerfile` links
 
-- `centos-7-redis40u`,[`4.1.0`](https://github.com/jdeathe/centos-ssh-redis/tree/4.1.0) [(centos-7-redis40u/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7-redis40u/Dockerfile)
-- `centos-7`,[`3.1.0`](https://github.com/jdeathe/centos-ssh-redis/tree/3.1.0) [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7/Dockerfile)
-- `centos-6`,[`1.2.0`](https://github.com/jdeathe/centos-ssh-redis/tree/1.2.0) [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-6/Dockerfile)
+- [`4.1.1`](https://github.com/jdeathe/centos-ssh-redis/tree/4.1.1),`centos-7-redis40u` [(centos-7-redis40u/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7-redis40u/Dockerfile)
+- [`3.1.1`](https://github.com/jdeathe/centos-ssh-redis/tree/3.1.1),`centos-7` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7/Dockerfile)
+- [`1.2.1`](https://github.com/jdeathe/centos-ssh-redis/tree/1.2.1),`centos-6` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-6/Dockerfile)
 
 ## Overview
 
@@ -25,14 +25,14 @@ $ docker run -d \
   --name redis.1 \
   -p 6379:6379/tcp \
   --sysctl "net.core.somaxconn=2048" \
-  jdeathe/centos-ssh-redis:1.2.0
+  jdeathe/centos-ssh-redis:4.1.1
 ```
 
 Verify the named container's process status and health.
 
 ```
 $ docker ps -a \
-	-f "name=redis.1"
+  -f "name=redis.1"
 ```
 
 Verify successful initialisation of the named container.
@@ -63,7 +63,7 @@ In the following example the redis-server service is bound to port 6379 of the d
 
 ```
 $ docker stop redis.1 && \
-  docker rm redis.1 && \
+  docker rm redis.1; \
   docker run \
   --detach \
   --name redis.1 \
@@ -76,7 +76,7 @@ $ docker stop redis.1 && \
   --env "REDIS_MAXMEMORY_SAMPLES=10" \
   --env "REDIS_OPTIONS=--loglevel verbose" \
   --env "REDIS_TCP_BACKLOG=2048" \
-  jdeathe/centos-ssh-redis:1.2.0
+  jdeathe/centos-ssh-redis:4.1.1
 ```
 
 #### Environment Variables
