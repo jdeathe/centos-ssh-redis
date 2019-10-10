@@ -2,8 +2,8 @@
 # Constants
 # ------------------------------------------------------------------------------
 DOCKER_IMAGE_NAME := centos-ssh-redis
-DOCKER_IMAGE_RELEASE_TAG_PATTERN := ^[1,3-4]\.[0-9]+\.[0-9]+$
-DOCKER_IMAGE_TAG_PATTERN := ^(latest|[1,3-4]\.[0-9]+\.[0-9]+)$
+DOCKER_IMAGE_RELEASE_TAG_PATTERN := ^[1,3-5]\.[0-9]+\.[0-9]+$
+DOCKER_IMAGE_TAG_PATTERN := ^(latest|[1,3-5]\.[0-9]+\.[0-9]+)$
 DOCKER_USER := jdeathe
 SHPEC_ROOT := test/shpec
 
