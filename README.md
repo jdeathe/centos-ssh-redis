@@ -1,5 +1,6 @@
 ## Tags and respective `Dockerfile` links
 
+- [`5.0.0`](https://github.com/jdeathe/centos-ssh-redis/tree/5.0.0),`centos-7-redis5` [(centos-7-redis5/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7-redis5/Dockerfile)
 - [`4.1.1`](https://github.com/jdeathe/centos-ssh-redis/tree/4.1.1),`centos-7-redis40u` [(centos-7-redis40u/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7-redis40u/Dockerfile)
 - [`3.1.1`](https://github.com/jdeathe/centos-ssh-redis/tree/3.1.1),`centos-7` [(centos-7/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-7/Dockerfile)
 - [`1.2.1`](https://github.com/jdeathe/centos-ssh-redis/tree/1.2.1),`centos-6` [(centos-6/Dockerfile)](https://github.com/jdeathe/centos-ssh-redis/blob/centos-6/Dockerfile)
@@ -10,6 +11,7 @@ This build uses the base image [jdeathe/centos-ssh](https://github.com/jdeathe/c
 
 ### Image variants
 
+- [IUS Redis 5.0 - CentOS-7](https://github.com/jdeathe/centos-ssh-redis/tree/centos-7-redis5)
 - [IUS Redis 4.0 - CentOS-7](https://github.com/jdeathe/centos-ssh-redis/tree/centos-7-redis40u)
 - [EPEL Redis 3.2 - CentOS-7](https://github.com/jdeathe/centos-ssh-redis/tree/centos-7)
 - [EPEL Redis 3.2 - CentOS-6](https://github.com/jdeathe/centos-ssh-redis/tree/centos-6)
