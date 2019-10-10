@@ -27,7 +27,7 @@ $ docker run -d \
   --name redis.1 \
   -p 6379:6379/tcp \
   --sysctl "net.core.somaxconn=1024" \
-  jdeathe/centos-ssh-redis:4.1.1
+  jdeathe/centos-ssh-redis:5.0.0
 ```
 
 Verify the named container's process status and health.
@@ -78,7 +78,7 @@ $ docker stop redis.1 && \
   --env "REDIS_MAXMEMORY_SAMPLES=10" \
   --env "REDIS_OPTIONS=--loglevel verbose" \
   --env "REDIS_TCP_BACKLOG=2048" \
-  jdeathe/centos-ssh-redis:4.1.1
+  jdeathe/centos-ssh-redis:5.0.0
 ```
 
 #### Environment variables
